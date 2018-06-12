@@ -7,10 +7,12 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -57,6 +59,10 @@ class Handler extends ExceptionHandler
         }
         if ($e instanceof MethodNotAllowedHttpException) {
             return Controller::response(Response::HTTP_METHOD_NOT_ALLOWED, ['errors' => ['Method not allowed']]);
+        }
+        if ($e instanceof FatalThrowableError) {
+            Log::alert('internal.error', ['error' => $e]);
+            return Controller::response(Response::HTTP_BAD_REQUEST, ['errors' => ['Invalid request']]);
         }
         return parent::render($request, $e);
     }
