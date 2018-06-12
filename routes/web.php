@@ -22,3 +22,4 @@ $router->get('user/{id}', 'userController@get');
 $router->put('user/{id}', 'userController@update');
 $router->delete('user/{id}', 'userController@delete');
 $router->post('user/login', 'userController@login');
+$router->get('proxy/placeholder/{id}', 'proxyController@jsonPlaceholder');
