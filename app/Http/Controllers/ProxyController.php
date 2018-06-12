@@ -18,7 +18,7 @@ class ProxyController extends Controller
      */
     public function jsonPlaceholder(int $id)
     {
-        $client = new Client();
+        $client = new Client(['verify' => false]);
         try {
             $result = $client->request('GET', self::JSON_PLACEHOLDER_URL . (int) $id);
             $data = json_decode($result->getBody(), true);
