@@ -9,10 +9,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
-use Laravel\Lumen\Routing\Controller as BaseController;
 
 
-class UserController extends BaseController
+class UserController extends Controller
 {
     /**
      * @param Request $request
@@ -27,7 +26,7 @@ class UserController extends BaseController
 
         $user = User::create($request->post('email'), $request->post('password'));
 
-        return $this->_response(Response::HTTP_CREATED, $user->toArray());
+        return self::response(Response::HTTP_CREATED, $user->toArray());
     }
 
     /**
@@ -44,10 +43,10 @@ class UserController extends BaseController
 
         $user = User::getByEmail($request->post('email'));
         if (!$user || !$user->isValidPassword($request->post('password'))) {
-            return $this->_response(Response::HTTP_BAD_REQUEST, ['errors' => ['Invalid credentials']]);
+            return self::response(Response::HTTP_BAD_REQUEST, ['errors' => ['Invalid credentials']]);
         }
 
-        return $this->_response(Response::HTTP_OK, ['token' => $user->getJwtToken()]);
+        return self::response(Response::HTTP_OK, ['token' => $user->getJwtToken()]);
     }
 
     /**
@@ -64,10 +63,10 @@ class UserController extends BaseController
 
         $user = User::getById((int) $id);
         if (!$user) {
-            return $this->_response(Response::HTTP_NOT_FOUND, ['errors' => ['User not found']]);
+            return self::response(Response::HTTP_NOT_FOUND, ['errors' => ['User not found']]);
         }
 
-        return $this->_response(Response::HTTP_OK, $user->toArray());
+        return self::response(Response::HTTP_OK, $user->toArray());
     }
 
     /**
@@ -81,7 +80,7 @@ class UserController extends BaseController
             return $authUserResult;
         }
 
-        return $this->_response(Response::HTTP_OK, User::all());
+        return self::response(Response::HTTP_OK, User::all());
     }
 
     /**
@@ -103,12 +102,12 @@ class UserController extends BaseController
 
         $user = User::getById((int) $id);
         if (!$user) {
-            return $this->_response(Response::HTTP_NOT_FOUND, ['errors' => ['User not found']]);
+            return self::response(Response::HTTP_NOT_FOUND, ['errors' => ['User not found']]);
         }
 
         $user->updateCredentials($request->post('email'), $request->post('password'));
 
-        return $this->_response(Response::HTTP_ACCEPTED, $user->toArray());
+        return self::response(Response::HTTP_ACCEPTED, $user->toArray());
     }
 
     public function delete(Request $request, int $id)
@@ -120,29 +119,13 @@ class UserController extends BaseController
 
         $user = User::getById((int) $id);
         if (!$user) {
-            return $this->_response(Response::HTTP_NOT_FOUND, ['errors' => ['User not found']]);
+            return self::response(Response::HTTP_NOT_FOUND, ['errors' => ['User not found']]);
         }
 
         /** @noinspection PhpUnhandledExceptionInspection */
         $user->delete();
 
-        return $this->_response(Response::HTTP_ACCEPTED);
-    }
-
-    /**
-     * @param int $code
-     * @param mixed $data
-     * @return JsonResponse
-     */
-    private function _response(int $code, $data = [])
-    {
-        $isSuccess = false;
-        if (in_array($code, [Response::HTTP_OK, Response::HTTP_CREATED, Response::HTTP_ACCEPTED])) {
-            $isSuccess = true;
-        }
-        $data = ['data' => $data, 'is_success' => $isSuccess];
-
-        return response()->json($data, $code);
+        return self::response(Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -150,14 +133,14 @@ class UserController extends BaseController
      * @param bool $isLogin
      * @return bool|JsonResponse
      */
-    private function _validateCredentials(Request $request, $isLogin = true)
+    protected function _validateCredentials(Request $request, $isLogin = true)
     {
         $validator = Validator::make($request->all(), [
             'email' => ($isLogin) ? 'required|email' : 'required|email|unique:users',
             'password' => 'required'
         ]);
         if ($validator->fails()) {
-            return $this->_response(Response::HTTP_BAD_REQUEST, ['errors' => $validator->errors()->all()]);
+            return self::response(Response::HTTP_BAD_REQUEST, ['errors' => $validator->errors()->all()]);
         }
 
         return true;
@@ -171,17 +154,17 @@ class UserController extends BaseController
     {
         $token = $request->header('Authorization', '');
         if (!$token) {
-            return $this->_response(Response::HTTP_UNAUTHORIZED, ['errors' => ['This method requires authorization token']]);
+            return self::response(Response::HTTP_UNAUTHORIZED, ['errors' => ['This method requires authorization token']]);
         }
         try {
             $user = User::getByJwtToken($token);
         } catch (ExpiredException $e) {
-            return $this->_response(Response::HTTP_UNAUTHORIZED, ['errors' => ['Token expired']]);
+            return self::response(Response::HTTP_UNAUTHORIZED, ['errors' => ['Token expired']]);
         } catch (Exception $e) {
-            return $this->_response(Response::HTTP_UNAUTHORIZED, ['errors' => ['Invalid token']]);
+            return self::response(Response::HTTP_UNAUTHORIZED, ['errors' => ['Invalid token']]);
         }
         if (!$user) {
-            return $this->_response(Response::HTTP_NOT_FOUND, ['errors' => ['Token user not found']]);
+            return self::response(Response::HTTP_NOT_FOUND, ['errors' => ['Token user not found']]);
         }
 
         return $user;

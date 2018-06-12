@@ -39,4 +39,32 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
     {
         return uniqid('unit_') . '@example.com';
     }
+
+    /**
+     * @param int $code
+     * @param bool $isSuccess
+     */
+    protected function _testResponseStructure(int $code, bool $isSuccess = true)
+    {
+        $content = $this->response->getOriginalContent();
+        $this->assertEquals($code, $this->response->getStatusCode());
+        $this->assertEquals('application/json', $this->response->headers->get('content-type'));
+        $this->assertInternalType('array', $content);
+        $this->assertArrayHasKey('is_success', $content);
+        $this->assertArrayHasKey('data', $content);
+        $this->assertInternalType('array', $content['data']);
+        $this->assertEquals($isSuccess, $content['is_success']);
+    }
+
+    /**
+     * @param int $code
+     */
+    protected function _testErrorResponseStructure(int $code)
+    {
+        $this->_testResponseStructure($code, false);
+        $content = $this->response->getOriginalContent();
+        $this->assertArrayHasKey('errors', $content['data']);
+        $this->assertInternalType('array', $content['data']['errors']);
+        $this->assertGreaterThanOrEqual(1, count($content['data']['errors']));
+    }
 }
