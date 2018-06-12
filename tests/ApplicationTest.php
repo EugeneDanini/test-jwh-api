@@ -18,4 +18,11 @@ class ApplicationTest extends TestCase
         $this->assertEquals(Response::HTTP_MOVED_PERMANENTLY, $this->response->getStatusCode());
         $this->assertEquals(env('APP_REPO_URL'), $this->response->headers->get('location'));
     }
+
+    public function testMethodNotAllowed()
+    {
+        $this->post('/');
+
+        $this->_testErrorResponseStructure(Response::HTTP_METHOD_NOT_ALLOWED);
+    }
 }
