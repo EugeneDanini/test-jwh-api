@@ -1,4 +1,4 @@
-# Test JWH API
+# Test JWT API
 
 ## Requirements
 Requires: PHP >=7.1.3, composer, SQLite database driver, curl
@@ -6,11 +6,11 @@ Requires: PHP >=7.1.3, composer, SQLite database driver, curl
 ## Installation
 Clone repository
 ```bash
-git clone https://github.com/EugeneDanini/test-jwh-api.git
+git clone https://github.com/EugeneDanini/test-jwt-api.git
 ```
 Change working directory
 ```bash
-cd test-jwh-api
+cd test-jwt-api
 ```
 
 Make sure that the .env file with config exists in directory. Development and production config files are provided as .env.development and .env.production in repository.
