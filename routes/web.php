@@ -15,11 +15,11 @@
  * @var Laravel\Lumen\Routing\Router $router
  */
 
-$router->get('/', 'controller@index');
-$router->get('user', 'userController@getList');
-$router->post('user', 'userController@add');
-$router->get('user/{id}', 'userController@get');
-$router->put('user/{id}', 'userController@update');
-$router->delete('user/{id}', 'userController@delete');
-$router->post('user/login', 'userController@login');
-$router->get('proxy/placeholder/{id}', 'proxyController@jsonPlaceholder');
+$router->get('/', 'Controller@index');
+$router->get('user', 'UserController@getList');
+$router->post('user', 'UserController@add');
+$router->get('user/{id}', 'UserController@get');
+$router->put('user/{id}', 'UserController@update');
+$router->delete('user/{id}', 'UserController@delete');
+$router->post('user/login', 'UserController@login');
+$router->get('proxy/placeholder/{id}', 'ProxyController@jsonPlaceholder');
