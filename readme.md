@@ -21,7 +21,7 @@ composer install
 ```
 Create database named database.sqlite in ./database directory
 ```bash
-sqlite3 database/database.sqlite
+sqlite3 database/database.sqlite ".databases"
 ```
 Run migration
 ```bash
@@ -173,4 +173,6 @@ Get data from third party source (https://jsonplaceholder.typicode.com) by given
 
 - Built-in PHP web server recommended only for development purposes;
 
-- Production application should work over HTTPS.
+- Production application should work over HTTPS;
+
+- Curl in GuzzleHttp client works without certificate verifying.
