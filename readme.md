@@ -36,6 +36,20 @@ Run tests
 php ./vendor/phpunit/phpunit/phpunit --no-configuration tests
 ```
 
+## Docker
+Clone or download repository
+```bash
+git clone https://github.com/EugeneDanini/test-jwt-api.git
+```
+Run build script with environment argument (production or development)
+```bash
+./docker_build.sh development
+```
+Start container
+```bash
+docker run -p 8000:8000 -d jwt
+```
+
 ## Entities
 ### User
 ```json
