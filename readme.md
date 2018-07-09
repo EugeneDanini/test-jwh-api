@@ -60,15 +60,6 @@ docker run -p 8000:8000 -d jwt
 "id":603
 }
 ```
-### Proxy result
-```json
-{
-"userId": 1,
-"id": 1,
-"title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-"body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-}
-```
 
 ## Responses
 Responses are always JSON with applicable status code (2** for success, 4** for errors).
@@ -160,19 +151,9 @@ Update user by given id.
 
 ***
 
-### Proxy API
-
-##### GET /proxy/placeholder/%id%
-Get data from third party source (https://jsonplaceholder.typicode.com) by given id.
-
-**Returns:** proxy result.
-
-***
 
 ## Notes
 
 - Built-in PHP web server recommended only for development purposes;
 
 - Production application should work over HTTPS;
-
-- Curl in GuzzleHttp client works without certificate verifying.
